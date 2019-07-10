@@ -1,5 +1,4 @@
 import React from 'react';
-//import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import './index.css';
 
@@ -14,6 +13,10 @@ type AnswerInputProps = {
 	onAnswerClick: () => any;
 }
 
+const InputTable = styled.table`
+	margin: auto;
+`;
+
 const AnswerInput = (props: AnswerInputProps) => {
 	const renderButton = (n: number) => {
 		return (
@@ -21,7 +24,7 @@ const AnswerInput = (props: AnswerInputProps) => {
 		);
 	}
 	return (
-		<table>
+		<InputTable>
 			<tbody>
 				<tr>
 					<td>{renderButton(1)}</td>
@@ -44,26 +47,31 @@ const AnswerInput = (props: AnswerInputProps) => {
 					<td><i className="nes-icon coin is-medium" onClick={() => {props.onAnswerClick()}}/></td>
 				</tr>
 			</tbody>
-		</table>
+		</InputTable>
 	);
 }
 
-type QuestionProps = {
+type QuizProps = {
 	answer: number;
 }
 
-type QuestionState = {
+type QuizState = {
 	num:number;
 	input: number | null;
 }
 
 const Input = styled.input`
-	width: 30px;
+	width: 100px;
 `;
 
-export class Addition extends React.Component<QuestionProps, QuestionState> {
+const QuizArea = styled.p`
+	text-align: center;
+	font-size: large;
+`
 
-	constructor(props:QuestionProps) {
+export class Addition extends React.Component<QuizProps, QuizState> {
+
+	constructor(props:QuizProps) {
 		super(props);
 		this.state = {
 			num: getRandomInt(0, this.props.answer),
@@ -91,23 +99,11 @@ export class Addition extends React.Component<QuestionProps, QuestionState> {
 	}
 
 	render() {
-		let style={
-			width: '40px'
-		}
-		let pattern:number = getRandomInt(1,2);
 		return (
-			<div style={style}>
-				<table>
-					<tbody>
-						<tr>
-							<td>{this.state.num}</td>
-							<td>+</td>
-							<td><Input type="number" readOnly value={''+this.state.input}/></td>
-							<td>=</td>
-							<td>{this.props.answer}</td>
-						</tr>
-					</tbody>
-				</table>
+			<div className="nes-container with-title">
+				<QuizArea className="nes-field is-inline">
+					{this.state.num}+<Input className="nes-input" type="number" readOnly value={''+this.state.input}/>={this.props.answer}
+				</QuizArea>
 				<AnswerInput onNumberClick={this.onInput} onAnswerClick={this.onAnswer}/>
 			</div>
 		);

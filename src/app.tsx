@@ -6,16 +6,12 @@ export const App = (props: any) => {
 	let answer: number = getRandomInt(0, 10);
 	return (
 		<React.Fragment>
-			<header>
+			<header className="sticky">
 				<div className="container">
-					<div className="main-content">
-						<div className="nav-brand">
-							<i className="nes-icon is-small nes-mario"></i>
-						</div>
+					<div className="nav-brand">
+						<i className="snes-jp-logo brand-logo"></i>
 					</div>
-					<div>
-						<p>aaa</p>
-					</div>
+					<div>aaa</div>
 				</div>
 			</header>
 			<div className="container">
