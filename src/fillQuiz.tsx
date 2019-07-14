@@ -1,49 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import './index.css';
-
-type AnswerInputProps = {
-	onInput: (value: string) => any;
-	onAnswer: () => any;
-}
-
-const InputTable = styled.table`
-	margin: auto;
-`;
-
-const AnswerInput = (props: AnswerInputProps) => {
-	const renderButton = (n: string) => {
-		return (
-			<button className="nes-btn" onClick={() => {props.onInput(n)}}>{n}</button>
-		);
-	}
-	return (
-		<InputTable>
-			<tbody>
-				<tr>
-					<td>{renderButton("1")}</td>
-					<td>{renderButton("2")}</td>
-					<td>{renderButton("3")}</td>
-				</tr>
-				<tr>
-					<td>{renderButton("4")}</td>
-					<td>{renderButton("5")}</td>
-					<td>{renderButton("6")}</td>
-				</tr>
-				<tr>
-					<td>{renderButton("7")}</td>
-					<td>{renderButton("8")}</td>
-					<td>{renderButton("9")}</td>
-				</tr>
-				<tr>
-					<td>&nbsp;</td>
-					<td>{renderButton("0")}</td>
-					<td><i className="nes-icon coin is-medium" onClick={() => {props.onAnswer()}}/></td>
-				</tr>
-			</tbody>
-		</InputTable>
-	);
-}
+import { AnswerInput } from './input';
+import { getRandomInt } from './util';
 
 export enum Operator {
 	Plus = "+",
@@ -71,12 +29,35 @@ export const BlankPositions: BlankPosition[] = [
 	BlankPosition.Answer
 ];
 
-type FillQuizFormulaProps = {
+export type FillQuizFormulaValue = {
 	left: number;
 	operator: Operator;
 	right: number;
 	answer: number;
 	blankPos: BlankPosition
+}
+
+export function newQuiz():FillQuizFormulaValue {
+	let answer = getRandomInt(0, 10);
+	let left = getRandomInt(0, answer);
+	let operator = Operators[getRandomInt(0, Operators.length-1)];
+	let otherSide;
+	if (operator === Operator.Plus) {
+		otherSide = answer - left;
+	} else {
+		otherSide = left - answer;
+	}
+	let blankPos = BlankPositions[getRandomInt(0, BlankPositions.length-1)];
+	return {
+		left: left,
+		operator: operator,
+		right: otherSide,
+		answer: answer,
+		blankPos: blankPos,
+	};
+}
+
+type FillQuizFormulaProps = FillQuizFormulaValue & {
 	input: string;
 }
 
@@ -125,62 +106,79 @@ const FormulaArea = styled.p`
 `
 
 type FillQuizProps = {
-	left: number;
-	operator: Operator;
-	right: number;
-	answer: number;
-	blankPos: BlankPosition
-
-	onResult: (result: boolean, userInput: string, left: number, operator: Operator, right: number, answer: number, blankPos: BlankPosition) => any;
+	onResult: (correct: boolean, userInput: string, quiz: FillQuizFormulaValue) => any;
 }
 
 
-type FillQuizState = {
+type FillQuizState = FillQuizFormulaValue & {
 	input: string;
 }
 
 export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 	constructor(props:FillQuizProps) {
 		super(props);
+		let quiz: FillQuizFormulaValue = newQuiz();
 		this.state = {
+			left: quiz.left,
+			operator: quiz.operator,
+			right: quiz.right,
+			answer: quiz.answer,
+			blankPos: quiz.blankPos,
 			input: ''
 		};
+		this.onInput = this.onInput.bind(this);
+		this.onClear = this.onClear.bind(this);
+		this.onAnswer = this.onAnswer.bind(this);
 	}
 
-	onInput = (n:string) => {
-		this.setState({input: this.state.input + n});
+	componentDidMount() {
+		let quiz: FillQuizFormulaValue = newQuiz();
+		this.setState({
+			left: quiz.left,
+			operator: quiz.operator,
+			right: quiz.right,
+			answer: quiz.answer,
+			blankPos: quiz.blankPos,
+			input: ''
+		});
+	}
+
+	onInput = (n:number|Operator) => {
+		if (typeof n === 'number') {
+			let input = 0;
+			if (this.state.input) {
+				input = parseInt(this.state.input);
+			}
+			this.setState({input: String(input * 10 + n)});
+		} else {
+			this.setState({input: n});
+		}
+	}
+
+	onClear = () => {
+		this.setState({input: ""});
 	}
 
 	onAnswer = () => {
+		let quiz: FillQuizFormulaValue = {
+			left: this.state.left,
+			operator: this.state.operator,
+			right: this.state.right,
+			answer: this.state.answer,
+			blankPos: this.state.blankPos
+		}
+		this.props.onResult(true, this.state.input, quiz);
 	}
 
 	render() {
 		return (
 			<div className="nes-container with-title">
 				<FormulaArea className="nes-field is-inline">
-					<FillQuizFormula left={this.props.left} operator={this.props.operator} right={this.props.right} blankPos={this.props.blankPos} answer={this.props.answer} input={this.state.input} />
+					<FillQuizFormula left={this.state.left} operator={this.state.operator} right={this.state.right} blankPos={this.state.blankPos} answer={this.state.answer} input={this.state.input} />
 				</FormulaArea>
-				<AnswerInput onInput={this.onInput} onAnswer={this.onAnswer}/>
+				<AnswerInput blankPosition={this.state.blankPos} onInput={this.onInput} onAnswer={this.onAnswer} onClear={this.onClear} />
 			</div>
 		);
 	}
-}
-
-export const Subtraction = (props: AnswerInputProps) => {
-	return (
-		<p>Subtraction</p>
-	);
-}
-
-export const Multiplication = (props: AnswerInputProps) => {
-	return (
-		<p>Subtraction</p>
-	);
-}
-
-export const Division = (props: AnswerInputProps) => {
-	return (
-		<p>Subtraction</p>
-	);
 }
 
