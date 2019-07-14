@@ -50,13 +50,21 @@ const NumberInput: React.FunctionComponent<AnswerInputInnerProps> = (props: Answ
 	);
 }
 
+const OperatorButton = styled.button`
+	font-family: "misakigothic2nd";
+	font-size: large;
+}
+
+
+`;
+
 const OperatorInput: React.FunctionComponent<AnswerInputInnerProps> = (props: AnswerInputInnerProps) => {
 	return (
 		<InputTable>
 			<tbody>
 				<tr>
-					<td><button className="nes-btn" onClick={() => {props.onInput(Operator.Plus)}}>たす</button></td>
-					<td><button className="nes-btn" onClick={() => {props.onInput(Operator.Minus)}}>ひく</button></td>
+					<td><OperatorButton className="nes-btn" onClick={() => {props.onInput(Operator.Plus)}}>たす</OperatorButton></td>
+					<td><OperatorButton className="nes-btn" onClick={() => {props.onInput(Operator.Minus)}}>ひく</OperatorButton></td>
 				</tr>
 				<tr>
 					<td><button className="nes-btn" onClick={() => {props.onClear()}}>C</button></td>

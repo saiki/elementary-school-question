@@ -2,6 +2,11 @@
 
 @import url(https://fonts.googleapis.com/css?family=Press+Start+2P);
 
+@font-face {
+	font-family:'misakigothic2nd';
+	src: url('/misaki_gothic_2nd.ttf') format('truetype');
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
 	-webkit-appearance: none;
