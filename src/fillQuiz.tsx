@@ -39,19 +39,27 @@ export type FillQuizFormulaValue = {
 
 export function newQuiz():FillQuizFormulaValue {
 	let answer = getRandomInt(0, 10);
-	let left = getRandomInt(0, answer);
-	let operator = Operators[getRandomInt(0, Operators.length-1)];
-	let otherSide;
+	let num = getRandomInt(1, answer);
+	let operator = Operators[getRandomInt(0, Operators.length)];
+	let left;
+	let right;
 	if (operator === Operator.Plus) {
-		otherSide = answer - left;
+		left = num;
+		right = answer - num;
 	} else {
-		otherSide = left - answer;
+		if (num > answer) {
+			right = num - answer;
+			left = num;
+		} else {
+			left = num + answer;
+			right = num;
+		}
 	}
-	let blankPos = BlankPositions[getRandomInt(0, BlankPositions.length-1)];
+	let blankPos = BlankPositions[getRandomInt(0, BlankPositions.length)];
 	return {
 		left: left,
 		operator: operator,
-		right: otherSide,
+		right: right,
 		answer: answer,
 		blankPos: blankPos,
 	};
@@ -61,39 +69,37 @@ type FillQuizFormulaProps = FillQuizFormulaValue & {
 	input: string;
 }
 
-export class FillQuizFormula extends React.Component<FillQuizFormulaProps> {
-	render() {
-		let left;
-		if (BlankPosition.Left === this.props.blankPos) {
-			left = <Input className="nes-input" readOnly value={this.props.input}/>;
-		} else {
-			left = this.props.left;
-		}
-		let right;
-		if (BlankPosition.Right === this.props.blankPos) {
-			right = <Input className="nes-input" readOnly value={this.props.input}/>;
-		} else {
-			right = this.props.right;
-		}
-		let operator;
-		if (BlankPosition.Operator === this.props.blankPos) {
-			operator = <Input className="nes-input" readOnly value={this.props.input}/>;
-		} else {
-			operator = this.props.operator;
-		}
-		let answer;
-		if (BlankPosition.Answer === this.props.blankPos) {
-			answer = <Input className="nes-input" readOnly value={this.props.input}/>;
-		} else {
-			answer = this.props.answer;
-		}
-
-		return (
-			<React.Fragment>
-				{left}{operator}{right}={answer}
-			</React.Fragment>
-		);
+export const FillQuizFormula: React.FunctionComponent<FillQuizFormulaProps> = (props: FillQuizFormulaProps) => {
+	let left;
+	if (BlankPosition.Left === props.blankPos) {
+		left = <Input className="nes-input" readOnly value={props.input}/>;
+	} else {
+		left = props.left;
 	}
+	let right;
+	if (BlankPosition.Right === props.blankPos) {
+		right = <Input className="nes-input" readOnly value={props.input}/>;
+	} else {
+		right = props.right;
+	}
+	let operator;
+	if (BlankPosition.Operator === props.blankPos) {
+		operator = <Input className="nes-input" readOnly value={props.input}/>;
+	} else {
+		operator = props.operator;
+	}
+	let answer;
+	if (BlankPosition.Answer === props.blankPos) {
+		answer = <Input className="nes-input" readOnly value={props.input}/>;
+	} else {
+		answer = props.answer;
+	}
+
+	return (
+		<React.Fragment>
+			{left}{operator}{right}={answer}
+		</React.Fragment>
+	);
 }
 
 const Input = styled.input`
@@ -167,7 +173,24 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 			answer: this.state.answer,
 			blankPos: this.state.blankPos
 		}
-		this.props.onResult(true, this.state.input, quiz);
+		let expected;
+		switch (this.state.blankPos) {
+			case BlankPosition.Left:
+				expected = this.state.left;
+				break;
+			case BlankPosition.Operator:
+				expected = this.state.operator;
+				break;
+			case BlankPosition.Right:
+				expected = this.state.right;
+				break;
+			case BlankPosition.Answer:
+				expected = this.state.answer;
+				break;
+		}
+		let actual = this.state.input;
+		const correct = (actual.length > 0) && (expected == actual);
+		this.props.onResult(correct, this.state.input, quiz);
 	}
 
 	render() {
