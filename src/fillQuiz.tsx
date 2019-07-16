@@ -195,7 +195,7 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 
 	render() {
 		return (
-			<div className="nes-container with-title">
+			<div className="nes-container is-rounded">
 				<FormulaArea className="nes-field is-inline">
 					<FillQuizFormula left={this.state.left} operator={this.state.operator} right={this.state.right} blankPos={this.state.blankPos} answer={this.state.answer} input={this.state.input} />
 				</FormulaArea>
