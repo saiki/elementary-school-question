@@ -189,7 +189,7 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 				break;
 		}
 		let actual = this.state.input;
-		const correct = (actual.length > 0) && (expected == actual);
+		const correct = (actual.length > 0) && (String(expected) === String(actual));
 		this.props.onResult(correct, this.state.input, quiz);
 	}
 
