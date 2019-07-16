@@ -19,7 +19,9 @@ const JapaneseFontLabel = styled.span`
 `;
 
 const BlankInput = styled.input`
-	width: auto;
+	width: 0;
+	margin-left: 10px;
+	margin-right: 10px;
 `;
 
 const HistoryList: React.FunctionComponent<HistoryDialogProps> = (props: HistoryDialogProps) => {
