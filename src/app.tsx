@@ -34,7 +34,7 @@ export class App extends React.Component<any, AppState> {
 		let correctCount = this.state.history.filter((h:History) => {return h.correct}).length;
 		return (
 			<Router>
-				<Header correctCount={correctCount}/>
+				<Header correctCount={correctCount} totalCount={this.state.history.length}/>
 				<div className="container">
 					<main className="main-content">
 						<Route exact path="/" render={() => <FillQuiz onResult={this.onResult} key={this.state.history.length} />} />

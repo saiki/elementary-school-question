@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 type HeaderProps = {
 	correctCount: number;
+	totalCount: number;
 }
 
 const Header: React.FunctionComponent<HeaderProps> = (props:HeaderProps) => {
@@ -14,7 +15,7 @@ const Header: React.FunctionComponent<HeaderProps> = (props:HeaderProps) => {
 				</div>
 				<div>
 					<Link to="/history">
-						<button className="nes-btn"><i className="nes-icon trophy is-small"></i>{props.correctCount}</button>
+						<button className="nes-btn"><i className="nes-icon trophy is-small"></i>{props.correctCount}/{props.totalCount}</button>
 					</Link>
 				</div>
 			</div>
