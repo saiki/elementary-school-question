@@ -53,9 +53,6 @@ const NumberInput: React.FunctionComponent<AnswerInputInnerProps> = (props: Answ
 const OperatorButton = styled.button`
 	font-family: "misakigothic2nd";
 	font-size: large;
-}
-
-
 `;
 
 const OperatorInput: React.FunctionComponent<AnswerInputInnerProps> = (props: AnswerInputInnerProps) => {
