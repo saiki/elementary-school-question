@@ -56,6 +56,10 @@ export function newQuiz():FillQuizFormulaValue {
 		}
 	}
 	let blankPos = BlankPositions[getRandomInt(0, BlankPositions.length)];
+	if (blankPos === BlankPosition.Operator
+		&& answer === 0 && left === 0 && right === 0) {
+		return newQuiz();
+	}
 	return {
 		left: left,
 		operator: operator,
