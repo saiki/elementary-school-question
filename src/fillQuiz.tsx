@@ -5,7 +5,7 @@ import { getRandomInt } from './util';
 
 export enum Operator {
 	Plus = "+",
-	Minus = "−",
+	Minus = "-",
 	Multiply = "×",
 	Divide = "÷"
 }
@@ -174,6 +174,9 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 	}
 
 	onAnswer = () => {
+		if (!this.state.input) {
+			return;
+		}
 		let quiz: FillQuizFormulaValue = {
 			left: this.state.left,
 			operator: this.state.operator,
