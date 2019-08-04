@@ -125,8 +125,6 @@ type FillQuizState = FillQuizFormulaValue & {
 }
 
 export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
-	private correctAudio:HTMLAudioElement;
-	private wrongAudio:HTMLAudioElement;
 	constructor(props:FillQuizProps) {
 		super(props);
 		let quiz: FillQuizFormulaValue = newQuiz();
@@ -141,8 +139,6 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 		this.onInput = this.onInput.bind(this);
 		this.onClear = this.onClear.bind(this);
 		this.onAnswer = this.onAnswer.bind(this);
-		this.correctAudio = new Audio("sound/coin.mp3");
-		this.wrongAudio = new Audio("sound/explosion.mp3");
 	}
 
 	componentDidMount() {
@@ -201,11 +197,6 @@ export class FillQuiz extends React.Component<FillQuizProps, FillQuizState> {
 		}
 		let actual = this.state.input;
 		const correct = (actual.length > 0) && (String(expected) === String(actual));
-		if (correct) {
-			this.correctAudio.play();
-		} else {
-			this.wrongAudio.play();
-		}
 		this.props.onResult(correct, this.state.input, quiz);
 	}
 
